@@ -2,6 +2,8 @@ package org.openstreetmap.osmosis.hbase.common;
 
 import com.google.common.primitives.Longs;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -17,7 +19,7 @@ import java.util.*;
  *
  * Created by willtemperley@gmail.com on 15-Jul-16.
  */
-public abstract class EntitySerDe<T extends  Entity> {
+public abstract class EntitySerDe<T extends Entity> {
 
     public static byte[] tags = "t".getBytes();
     public static byte[] data = "d".getBytes();
@@ -28,51 +30,86 @@ public abstract class EntitySerDe<T extends  Entity> {
     private static byte[] uid = "uid".getBytes();
     private static byte[] uname = "uname".getBytes();
 
+    public CellGenerator getDataCellGenerator() {
+        return dataKvGen;
+    }
+
+    private CellGenerator dataKvGen;
+
     private long getId(byte[] rowKey) {
         ArrayUtils.reverse(rowKey);
         return Longs.fromByteArray(rowKey);
     }
 
+    public byte[] getRowKey(Entity entity) {
+        byte[] bytes = Bytes.toBytes(entity.getId());
+        ArrayUtils.reverse(bytes);
+        return bytes;
+    }
+
     private String getString(byte[] column, Result result) {
         return Bytes.toString(result.getValue(data, column));
     }
-    private void setString(Put put, byte[] column, String value) { put.addColumn(data, column, Bytes.toBytes(value));}
-
     private long getLong(byte[] column, Result result) {
         return Bytes.toLong(result.getValue(data, column));
     }
-    private void setLong(Put put, byte[] column, long value) { put.addColumn(data, column, Bytes.toBytes(value));}
-
     private int getInt(byte[] column, Result result) {
         return Bytes.toInt(result.getValue(data, column));
     }
-    private void setInt(Put put, byte[] column, int value) { put.addColumn(data, column, Bytes.toBytes(value));}
-
     double getDouble(byte[] column, Result result) { return Bytes.toDouble(result.getValue(data, column)); }
-    void setDouble(byte[] column, double value, Put put) { put.addColumn(data, column, Bytes.toBytes(value));}
 
+    /**
+     * Generate cells for the main column family
+     *
+     * @param rowKey the entity row key
+     * @param entity the OSM entity
+     * @return all columns in the data col fam
+     */
+    public List<Cell> dataKeyValues(byte[] rowKey, T entity) {
 
-    void serialize(Put put, T entity) {
+        dataKvGen = new CellGenerator(data);
 
-        setInt(put, version, entity.getVersion());
-        setLong(put, timestamp, entity.getTimestamp().getTime());
-        setLong(put, changeset, entity.getChangesetId());
-        setInt(put, uid, entity.getUser().getId());
-        setString(put, uname, entity.getUser().getName());
+        List<Cell> keyValues = new ArrayList<Cell>();
 
-        for (Tag tag : entity.getTags()) {
-            put.addColumn(tags, tag.getKey().getBytes(), tag.getValue().getBytes());
-        }
+        keyValues.add( dataKvGen.getKeyValue(rowKey, version, entity.getVersion()) );
+        keyValues.add( dataKvGen.getKeyValue(rowKey, timestamp, entity.getTimestamp().getTime()) );
+        keyValues.add( dataKvGen.getKeyValue(rowKey, changeset, entity.getChangesetId()) );
+        keyValues.add( dataKvGen.getKeyValue(rowKey, uid, entity.getUser().getId()) );
+        keyValues.add( dataKvGen.getKeyValue(rowKey, uname, entity.getUser().getName()) );
 
-        encode(entity, put);
+        encode(rowKey, entity, keyValues);
 
+        return keyValues;
     }
 
-    public abstract void encode(T entity, Put put);
 
+    public List<Cell> tagKeyValues(byte[] rowKey, T entity) {
+
+        List<Cell> keyValues = new ArrayList<Cell>();
+        CellGenerator tagKvGen = new CellGenerator(tags);
+        for (Tag tag : entity.getTags()) {
+            keyValues.add( tagKvGen.getKeyValue(rowKey, tag.getKey().getBytes(), tag.getValue()) );
+        }
+        return keyValues;
+    }
+
+    Put serialize(T entity) {
+
+        byte[] rowKey = getRowKey(entity);
+        Put put = new Put(rowKey);
+
+        NavigableMap<byte[], List<Cell>> familyCellMap = put.getFamilyCellMap();
+
+        familyCellMap.put(data, dataKeyValues(rowKey, entity));
+        familyCellMap.put(tags, tagKeyValues(rowKey, entity));
+
+
+        return put;
+    }
+
+    protected abstract void encode(byte[] rowKey, T entity, List<Cell> keyValues);
 
     T deSerialize(Result result) {
-
         return constructEntity(result, getCommonEntityData(result));
     }
 

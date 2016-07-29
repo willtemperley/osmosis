@@ -10,7 +10,7 @@ import org.openstreetmap.osmosis.hbase.utility.MockHTableFactory;
  *
  * Created by willtemperley@gmail.com on 14-Jul-16.
  */
-class MockHTableModule extends AbstractModule {
+public class MockHTableModule extends AbstractModule {
 
     @Override
     protected void configure() {

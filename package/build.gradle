@@ -19,6 +19,7 @@ dependencies {
     runtime project(':osmosis-tagfilter')
     runtime project(':osmosis-tagtransform')
     runtime project(':osmosis-xml')
+    runtime project(':osmosis-hbase')
     runtime group: 'org.codehaus.plexus', name: 'plexus-classworlds', version: dependencyVersionClassworlds
 }
 

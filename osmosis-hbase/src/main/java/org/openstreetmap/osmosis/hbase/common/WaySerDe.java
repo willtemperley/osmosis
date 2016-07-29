@@ -1,6 +1,6 @@
 package org.openstreetmap.osmosis.hbase.common;
 
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.io.ArrayPrimitiveWritable;
 import org.apache.hadoop.io.WritableUtils;
@@ -24,7 +24,7 @@ public class WaySerDe extends EntitySerDe<Way> {
     private static byte[] nodeCol = "waynodes".getBytes();
 
     @Override
-    public void encode(Way entity, Put put) {
+    public void encode(byte[] rowKey, Way entity, List<Cell> keyValues) {
 
         List<WayNode> wayNodes = entity.getWayNodes();
         long[] nodeIds = new long[wayNodes.size()];
@@ -37,7 +37,7 @@ public class WaySerDe extends EntitySerDe<Way> {
         writable.set(nodeIds);
         byte[] bytes = WritableUtils.toByteArray(writable);
 
-        put.addColumn(data, nodeCol, bytes);
+        keyValues.add(getDataCellGenerator().getKeyValue(rowKey, nodeCol, bytes));
 
     }
 

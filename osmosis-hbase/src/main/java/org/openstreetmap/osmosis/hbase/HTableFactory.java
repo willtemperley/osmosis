@@ -24,7 +24,6 @@ class HTableFactory  implements TableFactory {
     private Configuration getConfiguration() {
         Configuration configuration = new Configuration();
         configuration.set("hbase.zookeeper.quorum", "hadoop-m2,hadoop-02,hadoop-m1");
-        configuration.set("hbase.zookeeper.clientport", "2181");
         configuration.set("hbase.master", "hadoop-m1");
         return configuration;
     }

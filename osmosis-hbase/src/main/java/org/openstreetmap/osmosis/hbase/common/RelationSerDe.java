@@ -1,13 +1,12 @@
 package org.openstreetmap.osmosis.hbase.common;
 
-import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.types.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.PositionedByteRange;
 import org.apache.hadoop.hbase.util.SimplePositionedMutableByteRange;
 import org.openstreetmap.osmosis.core.domain.v0_6.*;
-import org.openstreetmap.osmosis.core.store.IntegerLongIndexElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class RelationSerDe extends EntitySerDe<Relation> {
 
     //    class RelationMember extends PBType
     @Override
-    public void encode(Relation entity, Put put) {
+    public void encode(byte[] rowKey, Relation entity, List<Cell> keyValues) {
 
         List<RelationMember> members = entity.getMembers();
 
@@ -49,9 +48,10 @@ public class RelationSerDe extends EntitySerDe<Relation> {
             byte[] bytes = encodeRelationMember(members.get(i));
 
             byte[] colName = getRelationMemberColumn(i);
-            put.addColumn(data, colName, bytes);
-        }
 
+            Cell cell = getDataCellGenerator().getKeyValue(rowKey, colName, bytes);
+            keyValues.add(cell);
+        }
 
     }
 

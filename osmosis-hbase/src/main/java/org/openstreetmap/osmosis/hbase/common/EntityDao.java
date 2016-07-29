@@ -29,13 +29,6 @@ public abstract class EntityDao<T extends Entity> {
     private final Table table;
 
 
-    private byte[] getRowKey(Entity entity) {
-        byte[] bytes = Bytes.toBytes(entity.getId());
-        ArrayUtils.reverse(bytes);
-        return bytes;
-    }
-
-
     public void process(T entity, ChangeAction action) {
 
         if (action.equals(ChangeAction.Create)) {
@@ -51,7 +44,7 @@ public abstract class EntityDao<T extends Entity> {
 
     private void delete(T entity) {
 
-        Delete delete = new Delete(getRowKey(entity));
+        Delete delete = new Delete(serde.getRowKey(entity));
         try {
             table.delete(delete);
         } catch (IOException e) {
@@ -60,7 +53,7 @@ public abstract class EntityDao<T extends Entity> {
     }
 
     public boolean exists(T entity) {
-        Get get = new Get(getRowKey(entity));
+        Get get = new Get(serde.getRowKey(entity));
         try {
             return table.exists(get);
         } catch (IOException e) {
@@ -70,7 +63,7 @@ public abstract class EntityDao<T extends Entity> {
 
     public void get(Entity entity) {
 
-        Get get = new Get(getRowKey(entity));
+        Get get = new Get(serde.getRowKey(entity));
         try {
             table.get(get);
         } catch (IOException e) {
@@ -88,9 +81,8 @@ public abstract class EntityDao<T extends Entity> {
         }
 
         //A put with the timestamp of the entity
-        Put put = new Put(getRowKey(entity));
 
-        serde.serialize(put, entity);
+        Put put = serde.serialize(entity);
 
         try {
             table.put(put);

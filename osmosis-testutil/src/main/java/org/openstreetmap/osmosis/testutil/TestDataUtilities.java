@@ -1,16 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.testutil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.zip.GZIPOutputStream;
 
@@ -47,8 +38,9 @@ public class TestDataUtilities extends TemporaryFolder {
 			String line;
 
 			// Open the data template file.
-			dataReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
-					"/data/template/" + dataFileName), UTF8));
+			InputStream resourceAsStream = getClass().getResourceAsStream(
+					"/data/template/" + dataFileName);
+			dataReader = new BufferedReader(new InputStreamReader(resourceAsStream, UTF8));
 
 			// Create a temporary file and open it.
 			tmpFile = newFile();
