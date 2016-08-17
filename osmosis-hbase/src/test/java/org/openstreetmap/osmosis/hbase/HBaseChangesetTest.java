@@ -21,6 +21,7 @@ import org.openstreetmap.osmosis.dataset.v0_6.DumpDataset;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
 import org.openstreetmap.osmosis.hbase.mr.NodeMapper;
 import org.openstreetmap.osmosis.hbase.mr.OsmEntityMapper;
+import org.openstreetmap.osmosis.hbase.mr.RelationMapper;
 import org.openstreetmap.osmosis.hbase.mr.WayMapper;
 import org.openstreetmap.osmosis.hbase.reader.HBaseReader;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfRawBlob;

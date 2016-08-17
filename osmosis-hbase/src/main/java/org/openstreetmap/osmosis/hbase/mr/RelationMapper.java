@@ -1,4 +1,4 @@
-package org.openstreetmap.osmosis.hbase;
+package org.openstreetmap.osmosis.hbase.mr;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;

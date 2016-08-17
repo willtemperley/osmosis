@@ -14,15 +14,12 @@ import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.openstreetmap.osmosis.hbase.RelationMapper;
 
 /**
  *
  * Created by willtemperley@gmail.com on 26-Jul-16.
  */
 public class TableLoader extends Configured implements Tool{
-
-
 
     public static void main(String[] args) throws Exception {
 

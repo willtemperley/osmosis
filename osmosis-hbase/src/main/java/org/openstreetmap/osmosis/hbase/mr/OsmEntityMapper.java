@@ -19,8 +19,6 @@ import java.util.List;
  */
 public abstract class OsmEntityMapper<T extends Entity> extends Mapper<Text, ArrayPrimitiveWritable, ImmutableBytesWritable, Cell> {
 
-    private TableLoader tableLoader;
-
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         context.getConfiguration().get(EntityType.class.getName());
@@ -45,7 +43,7 @@ public abstract class OsmEntityMapper<T extends Entity> extends Mapper<Text, Arr
             Entity e = ec.getEntity();
             T entity;
             if (e.getType().equals(entityType)) {
-//                System.out.println("ec.getEntity().getType() = " + ec.getEntity().getType());
+
                 entity = (T) e;
 
                 byte[] rowKey = entitySerDe.getRowKey(entity);
