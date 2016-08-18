@@ -1,3 +1,6 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "1.2.3"
+}
 
 def hbaseVersion="1.2.1"
 
@@ -16,8 +19,4 @@ dependencies {
     testCompile project(':osmosis-xml')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
-}
-
-plugins {
-    id "com.github.johnrengelman.shadow" version "1.2.3"
 }
