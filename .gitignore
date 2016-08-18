@@ -6,3 +6,6 @@
 *.iws
 out
 /.idea/
+.test
+build/*
+target/*
