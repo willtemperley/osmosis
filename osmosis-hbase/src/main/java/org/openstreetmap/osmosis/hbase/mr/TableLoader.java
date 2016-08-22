@@ -29,6 +29,8 @@ public class TableLoader extends Configured implements Tool{
         }
 
         Configuration conf = new Configuration();
+        conf.set("hbase.zookeeper.quorum", "hadoop-m2,hadoop-m1,hadoop-01");
+        conf.set("hbase.master", "hadoop-m2");
         int res = ToolRunner.run(conf, new TableLoader(), args);
         System.exit(res);
     }
