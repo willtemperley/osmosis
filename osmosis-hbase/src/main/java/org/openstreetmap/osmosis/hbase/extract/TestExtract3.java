@@ -40,7 +40,7 @@ public class TestExtract3 {
 //    Injector objectGraph = Guice.createInjector(new MockHTableModule());
 //    private long relationId = 1L;
         Injector objectGraph = Guice.createInjector(new TableModule());
-        long relationId = 2716011 ;
+        long relationId = 2715959;
 
 //    }
 //    @Test
