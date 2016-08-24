@@ -25,7 +25,7 @@ import java.util.List;
  *
  * Created by willtemperley@gmail.com on 23-Aug-16.
  */
-public class TestExtract  {
+public class TestExtract3 {
 
 
 
@@ -40,7 +40,7 @@ public class TestExtract  {
 //    Injector objectGraph = Guice.createInjector(new MockHTableModule());
 //    private long relationId = 1L;
         Injector objectGraph = Guice.createInjector(new TableModule());
-        long relationId = 1443024L;
+        long relationId = 2716011 ;
 
 //    }
 //    @Test
