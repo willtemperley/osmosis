@@ -28,8 +28,6 @@ import java.util.List;
 public class TestExtract  {
 
 
-//    Injector objectGraph = Guice.createInjector(new MockHTableModule());
-//    private long relationId = 1L;
 
 
     /**
@@ -39,8 +37,11 @@ public class TestExtract  {
     public static void main(String[] args) throws IOException {
 
         String pathname = "/tmp/x.xml";
+//    Injector objectGraph = Guice.createInjector(new MockHTableModule());
+//    private long relationId = 1L;
         Injector objectGraph = Guice.createInjector(new TableModule());
         long relationId = 1443024L;
+
 //    }
 //    @Test
 //    public void testRelation() throws IOException {

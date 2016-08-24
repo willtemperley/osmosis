@@ -63,7 +63,11 @@ public abstract class EntityDao<T extends Entity> {
     public T get(long entityId) {
 
 
-        Get get = new Get(serde.getRowKey(entityId));
+        byte[] rowKey = serde.getRowKey(entityId);
+        System.out.println("Bytes.toLong(rowKey) = " + Bytes.toLong(rowKey));
+        Get get = new Get(rowKey);
+        get.addFamily(EntitySerDe.data);
+        get.addFamily(EntitySerDe.tags);
         try {
 
             Result result = table.get(get);
