@@ -64,13 +64,16 @@ public abstract class EntityDao<T extends Entity> {
 
 
         byte[] rowKey = serde.getRowKey(entityId);
-//        System.out.println("Bytes.toLong(rowKey) = " + Bytes.toLong(rowKey));
+        System.out.println("Bytes.toLong(rowKey) = " + Bytes.toLong(rowKey));
+
         Get get = new Get(rowKey);
         get.addFamily(EntitySerDe.data);
         get.addFamily(EntitySerDe.tags);
         try {
 
             Result result = table.get(get);
+            boolean exists = table.exists(get);
+            System.out.println("exists = " + exists);
             if (result == null) {
                 System.out.println("table = " + table.getName());
                 System.out.println("result = " + null);
