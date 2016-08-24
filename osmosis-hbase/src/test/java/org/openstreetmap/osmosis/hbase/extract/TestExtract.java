@@ -28,12 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Utility to extract a relation from db
+ *
  * Created by willtemperley@gmail.com on 23-Aug-16.
  */
 public class TestExtract extends AbstractDataTest {
 
 
-    private String pathname = "E:/tmp/x.xml";
+    private String pathname = "/tmp/x.xml";
 
 
 
