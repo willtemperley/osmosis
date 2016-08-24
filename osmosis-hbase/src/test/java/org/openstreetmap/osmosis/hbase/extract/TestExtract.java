@@ -35,22 +35,25 @@ import java.util.List;
 public class TestExtract extends AbstractDataTest {
 
 
-    private String pathname = "/tmp/x.xml";
 
 
 
 //    Injector objectGraph = Guice.createInjector(new MockHTableModule());
 //    private long relationId = 1L;
 
-    Injector objectGraph = Guice.createInjector(new TableModule());
-    private long relationId = 1443024L;
 
     /**
      * http://www.openstreetmap.org/relation/1443024#map=9/-29.3151/29.5999
      *
      */
-    @Test
-    public void testRelation() throws IOException {
+    public static void main(String[] args) throws IOException {
+
+        String pathname = "/tmp/x.xml";
+        Injector objectGraph = Guice.createInjector(new TableModule());
+        long relationId = 1443024L;
+//    }
+//    @Test
+//    public void testRelation() throws IOException {
 
 
 //        ExtractRelation extractRelation = objectGraph.getInstance(ExtractRelation.class);
@@ -58,18 +61,18 @@ public class TestExtract extends AbstractDataTest {
 //        Relation relation = extractRelation.get(1443024);
 //        System.out.println("relation = " + relation);
 
-        File snapshotFile;
+//        File snapshotFile;
 
         // Generate input files.
-        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+//        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
 
         //two for one
-        HBaseChangeWriter changeWriter = objectGraph.getInstance(HBaseChangeWriter.class);
+//        HBaseChangeWriter changeWriter = objectGraph.getInstance(HBaseChangeWriter.class);
 
         //read
-        XmlReader xmlReader = new XmlReader(snapshotFile, true, CompressionMethod.None);
-        xmlReader.setSink(changeWriter);
-        xmlReader.run();
+//        XmlReader xmlReader = new XmlReader(snapshotFile, true, CompressionMethod.None);
+//        xmlReader.setSink(changeWriter);
+//        xmlReader.run();
 
 
         TableFactory tableFactory = objectGraph.getInstance(TableFactory.class);
@@ -108,7 +111,7 @@ public class TestExtract extends AbstractDataTest {
 
     }
 
-    private void writeHBaseDataToXml(EntityListDumper dumpDataset, File actualResultFile) {
+    private static void writeHBaseDataToXml(EntityListDumper dumpDataset, File actualResultFile) {
 
         XmlWriter writer = new XmlWriter(actualResultFile, CompressionMethod.None);
 
