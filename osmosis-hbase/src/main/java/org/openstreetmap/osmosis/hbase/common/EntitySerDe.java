@@ -42,7 +42,12 @@ public abstract class EntitySerDe<T extends Entity> {
     }
 
     public byte[] getRowKey(Entity entity) {
-        byte[] bytes = Bytes.toBytes(entity.getId());
+        long entityId = entity.getId();
+        return getRowKey(entityId);
+    }
+
+    public byte[] getRowKey(long entityId) {
+        byte[] bytes = Bytes.toBytes(entityId);
         ArrayUtils.reverse(bytes);
         return bytes;
     }
@@ -115,7 +120,6 @@ public abstract class EntitySerDe<T extends Entity> {
 
     protected abstract T constructEntity(Result result, CommonEntityData commonEntityData);
 
-
     private CommonEntityData getCommonEntityData(Result result) {
 
         long id = getId(result.getRow());
@@ -139,7 +143,7 @@ public abstract class EntitySerDe<T extends Entity> {
         for (Map.Entry<byte[], byte[]> entry : familyMap.entrySet()) {
             String key = Bytes.toString(entry.getKey());
             String value = Bytes.toString(entry.getValue());
-            tags.add(new Tag(key,value));
+            tags.add(new Tag(key, value));
         }
 
         return new CommonEntityData(id, v, date, osmUser, cs, tags);

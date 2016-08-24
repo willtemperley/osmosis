@@ -106,11 +106,6 @@ public class HBaseChangesetTest extends AbstractDataTest {
 
         dataUtils.compareFiles(snapshotXmlFile, actualResultFile);
 
-//        BufferedReader br = new BufferedReader(new FileReader(actualResultFile));
-//        String line;
-//        while ((line = br.readLine()) != null) {
-////            System.out.println(line);
-//        }
     }
 
     /**

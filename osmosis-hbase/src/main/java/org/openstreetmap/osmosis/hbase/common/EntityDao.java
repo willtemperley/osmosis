@@ -1,10 +1,7 @@
 package org.openstreetmap.osmosis.hbase.common;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.hadoop.hbase.client.Delete;
-import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
@@ -52,20 +49,25 @@ public abstract class EntityDao<T extends Entity> {
         }
     }
 
-    public boolean exists(T entity) {
-        Get get = new Get(serde.getRowKey(entity));
-        try {
-            return table.exists(get);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+//    public boolean exists(T entity) {
+//        Get get = new Get(serde.getRowKey(entity));
+//        try {
+//            return table.exists(get);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e.getMessage());
+//        }
+//    }
 
-    public void get(Entity entity) {
 
-        Get get = new Get(serde.getRowKey(entity));
+    //FIXME multiple gets will be required too
+    public T get(long entityId) {
+
+        Get get = new Get(serde.getRowKey(entityId));
         try {
-            table.get(get);
+
+            Result result = table.get(get);
+            return serde.deSerialize(result);
+
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }

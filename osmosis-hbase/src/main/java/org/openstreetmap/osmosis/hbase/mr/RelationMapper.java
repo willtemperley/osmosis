@@ -6,6 +6,8 @@ import org.openstreetmap.osmosis.hbase.common.RelationSerDe;
 import org.openstreetmap.osmosis.hbase.mr.OsmEntityMapper;
 
 /**
+ * Maps relations to hbase key-values
+ *
  * Created by willtemperley@gmail.com on 28-Jul-16.
  */
 public class RelationMapper extends OsmEntityMapper<Relation> {

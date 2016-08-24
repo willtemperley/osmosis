@@ -5,6 +5,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.hbase.common.WaySerDe;
 
 /**
+ * Maps ways to hbase key-values
+ *
  * Created by willtemperley@gmail.com on 28-Jul-16.
  */
 public class WayMapper extends OsmEntityMapper<Way> {

@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.hbase.common.*;
  * 
  * @author willtemperley@gmail.com
  */
-class HBaseChangeWriter implements ChangeSink, Sink {
+public class HBaseChangeWriter implements ChangeSink, Sink {
 
     private final TableFactory tableFactory;
 

@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * Created by willtemperley@gmail.com on 14-Jul-16.
  */
-class TableModule extends AbstractModule {
+public class TableModule extends AbstractModule {
 
     @Override
     protected void configure() {
