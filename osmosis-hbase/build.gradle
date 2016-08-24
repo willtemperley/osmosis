@@ -1,6 +1,6 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "1.2.3"
-}
+//plugins {
+//    id "com.github.johnrengelman.shadow" version "1.2.3"
+//}
 
 def hbaseVersion="1.2.1"
 
@@ -8,6 +8,8 @@ dependencies {
 
     compile project(':osmosis-core')
     compile project(':osmosis-pbf2')
+    compile project(':osmosis-xml')
+
     compile group: 'org.apache.hbase', name: 'hbase-client', version: hbaseVersion
     compile group: 'org.apache.hbase', name: 'hbase-server', version: hbaseVersion
     testCompile group: 'org.apache.hbase', name: 'hbase-examples', version:  hbaseVersion
@@ -16,7 +18,6 @@ dependencies {
 
     testCompile project(':osmosis-dataset')
     testCompile project(':osmosis-testutil')
-    testCompile project(':osmosis-xml')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
 }
@@ -24,8 +25,8 @@ dependencies {
 
 
 
-shadowJar {
-    exclude 'META-INF/*.DSA'
-    exclude 'META-INF/*.RSA'
-
-}
+//shadowJar {
+//    exclude 'META-INF/*.DSA'
+//    exclude 'META-INF/*.RSA'
+//
+//}

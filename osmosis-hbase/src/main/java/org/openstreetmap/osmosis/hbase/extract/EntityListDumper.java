@@ -2,7 +2,6 @@
 package org.openstreetmap.osmosis.hbase.extract;
 
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
-import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.DatasetSinkSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;

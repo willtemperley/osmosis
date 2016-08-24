@@ -2,24 +2,17 @@ package org.openstreetmap.osmosis.hbase.extract;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.junit.Test;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.*;
-import org.openstreetmap.osmosis.dataset.v0_6.DumpDataset;
-import org.openstreetmap.osmosis.hbase.HBaseChangeWriter;
-import org.openstreetmap.osmosis.hbase.MockHTableModule;
 import org.openstreetmap.osmosis.hbase.TableModule;
 import org.openstreetmap.osmosis.hbase.common.NodeDao;
 import org.openstreetmap.osmosis.hbase.common.RelationDao;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
 import org.openstreetmap.osmosis.hbase.common.WayDao;
-import org.openstreetmap.osmosis.hbase.reader.HBaseReader;
-import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
-import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 import org.openstreetmap.osmosis.xml.v0_6.XmlWriter;
 
 import java.io.File;
@@ -32,10 +25,7 @@ import java.util.List;
  *
  * Created by willtemperley@gmail.com on 23-Aug-16.
  */
-public class TestExtract extends AbstractDataTest {
-
-
-
+public class TestExtract  {
 
 
 //    Injector objectGraph = Guice.createInjector(new MockHTableModule());
