@@ -62,10 +62,15 @@ public abstract class EntityDao<T extends Entity> {
     //FIXME multiple gets will be required too
     public T get(long entityId) {
 
+
         Get get = new Get(serde.getRowKey(entityId));
         try {
 
             Result result = table.get(get);
+            if (result == null) {
+                System.out.println("table = " + table.getName());
+                System.out.println("result = " + null);
+            }
             return serde.deSerialize(result);
 
         } catch (IOException e) {
