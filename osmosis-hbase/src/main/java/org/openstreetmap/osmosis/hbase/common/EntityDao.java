@@ -70,6 +70,8 @@ public abstract class EntityDao<T extends Entity> {
             if (result == null) {
                 System.out.println("table = " + table.getName());
                 System.out.println("result = " + null);
+            } else {
+                System.out.println("result = " + result);
             }
             return serde.deSerialize(result);
 
