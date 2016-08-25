@@ -1,4 +1,4 @@
-package org.openstreetmap.osmosis.hbase.extract;
+package org.openstreetmap.osmosis.hbase;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -16,6 +16,7 @@ import org.openstreetmap.osmosis.hbase.common.NodeDao;
 import org.openstreetmap.osmosis.hbase.common.RelationDao;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
 import org.openstreetmap.osmosis.hbase.common.WayDao;
+import org.openstreetmap.osmosis.hbase.extract.EntityListDumper;
 import org.openstreetmap.osmosis.hbase.reader.HBaseReader;
 import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;

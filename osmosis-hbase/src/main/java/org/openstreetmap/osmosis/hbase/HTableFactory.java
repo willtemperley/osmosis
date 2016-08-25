@@ -14,7 +14,6 @@ import java.io.IOException;
  */
 class HTableFactory  implements TableFactory {
 
-
     private final Connection connection;
 
     public HTableFactory() throws IOException {
