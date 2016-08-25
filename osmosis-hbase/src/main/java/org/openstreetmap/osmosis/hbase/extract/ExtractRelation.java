@@ -25,7 +25,7 @@ import java.util.List;
  *
  * Created by willtemperley@gmail.com on 23-Aug-16.
  */
-public class TestExtract3 {
+public class ExtractRelation {
 
 
 
@@ -37,34 +37,8 @@ public class TestExtract3 {
     public static void main(String[] args) throws IOException {
 
         String pathname = "/tmp/x.xml";
-//    Injector objectGraph = Guice.createInjector(new MockHTableModule());
-//    private long relationId = 1L;
         Injector objectGraph = Guice.createInjector(new TableModule());
         long relationId = 2715959;
-
-//    }
-//    @Test
-//    public void testRelation() throws IOException {
-
-
-//        ExtractRelation extractRelation = objectGraph.getInstance(ExtractRelation.class);
-
-//        Relation relation = extractRelation.get(1443024);
-//        System.out.println("relation = " + relation);
-
-//        File snapshotFile;
-
-        // Generate input files.
-//        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
-
-        //two for one
-//        HBaseChangeWriter changeWriter = objectGraph.getInstance(HBaseChangeWriter.class);
-
-        //read
-//        XmlReader xmlReader = new XmlReader(snapshotFile, true, CompressionMethod.None);
-//        xmlReader.setSink(changeWriter);
-//        xmlReader.run();
-
 
         TableFactory tableFactory = objectGraph.getInstance(TableFactory.class);
 
