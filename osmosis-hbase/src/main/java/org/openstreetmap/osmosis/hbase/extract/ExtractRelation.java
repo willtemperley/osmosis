@@ -41,6 +41,8 @@ public class ExtractRelation {
 
         RelationBuilder relationBuilder = new RelationBuilder(tableFactory);
 
+        System.out.println("relationBuilder = " + relationBuilder);
+
         List<EntityContainer> relation = relationBuilder.getRelation(relationId);
 
         EntityListDumper entityListDumper = new EntityListDumper(relation);

@@ -2,6 +2,7 @@ package org.openstreetmap.osmosis.hbase.extract;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.*;
 import org.openstreetmap.osmosis.hbase.common.NodeDao;
@@ -33,6 +34,7 @@ public class RelationBuilder {
     public List<EntityContainer> getRelation(long relationId) {
         Relation relation = relationDao.get(relationId);
         List<EntityContainer> entityContainers = new ArrayList<EntityContainer>();
+        entityContainers.add(new RelationContainer(relation));
         return getRelationMembers(relation, entityContainers);
     }
 
@@ -40,6 +42,8 @@ public class RelationBuilder {
         List<RelationMember> members = relation.getMembers();
         for (RelationMember member : members) {
             EntityType memberType = member.getMemberType();
+            System.out.println("memberType = " + memberType);
+            System.out.println("id = " + member.getMemberId());
             if (memberType.equals(EntityType.Way)) {
                 Way way = wayDao.get(member.getMemberId());
                 WayContainer wayContainer = new WayContainer(way);
