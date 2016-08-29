@@ -17,7 +17,6 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlWriter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,8 +25,6 @@ import java.util.List;
  * Created by willtemperley@gmail.com on 23-Aug-16.
  */
 public class ExtractRelation {
-
-
 
 
     /**
@@ -42,44 +39,18 @@ public class ExtractRelation {
 
         TableFactory tableFactory = objectGraph.getInstance(TableFactory.class);
 
-        RelationDao relationDao = new RelationDao(tableFactory.getTable("relations"));
-        WayDao wayDao = new WayDao(tableFactory.getTable("ways"));
-        NodeDao nodeDao = new NodeDao(tableFactory.getTable("nodes"));
+        RelationBuilder relationBuilder = new RelationBuilder(tableFactory);
 
+        List<EntityContainer> relation = relationBuilder.getRelation(relationId);
 
-        Relation relation = relationDao.get(relationId);
-        System.out.println("relation = " + relation);
-
-        List<EntityContainer> l = new ArrayList<EntityContainer>();
-        RelationContainer relationContainer = new RelationContainer(relation);
-        l.add(relationContainer);
-
-        List<RelationMember> members = relation.getMembers();
-        for (RelationMember member : members) {
-            if (member.getMemberType().equals(EntityType.Way)) {
-                Way way = wayDao.get(member.getMemberId());
-                WayContainer wayContainer = new WayContainer(way);
-                l.add(wayContainer);
-
-                List<WayNode> wayNodes = way.getWayNodes();
-                for (WayNode wayNode : wayNodes) {
-                    long nodeId = wayNode.getNodeId();
-                    Node node = nodeDao.get(nodeId);
-                    NodeContainer nodeContainer = new NodeContainer(node);
-                    l.add(nodeContainer);
-                }
-            }
-        }
-
-        EntityListDumper entityListDumper = new EntityListDumper(l);
+        EntityListDumper entityListDumper = new EntityListDumper(relation);
         writeHBaseDataToXml(entityListDumper, new File(pathname));
-
     }
+
 
     private static void writeHBaseDataToXml(EntityListDumper dumpDataset, File actualResultFile) {
 
         XmlWriter writer = new XmlWriter(actualResultFile, CompressionMethod.None);
-
 
         //dataset sunk into sorter
         dumpDataset.setSink(writer);
