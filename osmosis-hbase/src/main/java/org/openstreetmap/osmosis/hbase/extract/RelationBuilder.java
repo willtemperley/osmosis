@@ -44,6 +44,7 @@ public class RelationBuilder {
             EntityType memberType = member.getMemberType();
             System.out.println("memberType = " + memberType);
             System.out.println("id = " + member.getMemberId());
+
             if (memberType.equals(EntityType.Way)) {
                 Way way = wayDao.get(member.getMemberId());
                 WayContainer wayContainer = new WayContainer(way);
@@ -57,7 +58,8 @@ public class RelationBuilder {
                     containers.add(nodeContainer);
                 }
             } else if (memberType.equals(EntityType.Relation)) {
-                getRelationMembers(relation, containers);
+                Relation nestedRelation = relationDao.get(member.getMemberId());
+                getRelationMembers(nestedRelation, containers);
             }
         }
 
