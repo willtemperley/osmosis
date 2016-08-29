@@ -1,5 +1,6 @@
 package org.openstreetmap.osmosis.hbase.extract;
 
+import org.apache.hadoop.hbase.client.Get;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
@@ -45,15 +46,23 @@ public class RelationBuilder {
             System.out.println("memberType = " + memberType);
             System.out.println("id = " + member.getMemberId());
 
-            if (memberType.equals(EntityType.Way)) {
+            if (memberType.equals(EntityType.Node)) {
+                Node node = nodeDao.get(member.getMemberId());
+                containers.add(new NodeContainer(node));
+            } else if (memberType.equals(EntityType.Way)) {
                 Way way = wayDao.get(member.getMemberId());
                 WayContainer wayContainer = new WayContainer(way);
                 containers.add(wayContainer);
 
                 List<WayNode> wayNodes = way.getWayNodes();
-                for (WayNode wayNode : wayNodes) {
-                    long nodeId = wayNode.getNodeId();
-                    Node node = nodeDao.get(nodeId);
+                long[] longs = new long[wayNodes.size()];
+                for (int i = 0; i < wayNodes.size(); i++) {
+                    longs[i] = wayNodes.get(i).getNodeId();
+                }
+
+                List<Node> nodes = nodeDao.get(longs);
+                System.out.println("nodes = " + nodes.size());
+                for (Node node : nodes) {
                     NodeContainer nodeContainer = new NodeContainer(node);
                     containers.add(nodeContainer);
                 }

@@ -8,6 +8,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAOs and serdes are separated to allow reuse of SerDes in e.g. iterators
@@ -45,7 +47,7 @@ public abstract class EntityDao<T extends Entity> {
         try {
             table.delete(delete);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -54,10 +56,33 @@ public abstract class EntityDao<T extends Entity> {
         try {
             return table.exists(get);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
+    public List<T> get(long[] entityIds) {
+
+        List<Get> gets = new ArrayList<Get>(entityIds.length);
+        List<T> entities = new ArrayList<T>(entityIds.length);
+
+        for (int i = 0; i < entityIds.length; i++) {
+
+            byte[] rowKey = serde.getRowKey(entityIds[i]);
+            Get get = new Get(rowKey);
+            gets.add(i, get);
+        }
+
+        try {
+            Result[] results = table.get(gets);
+
+            for (int i = 0; i < results.length; i++) {
+                entities.add(i, serde.deSerialize(results[i]));
+            }
+            return entities;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     //FIXME multiple gets will be required too
     public T get(long entityId) {
@@ -83,7 +108,7 @@ public abstract class EntityDao<T extends Entity> {
             return serde.deSerialize(result);
 
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
