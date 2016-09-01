@@ -10,6 +10,9 @@ dependencies {
     compile project(':osmosis-pbf2')
     compile project(':osmosis-xml')
 
+    compile group: 'com.vividsolutions', name: 'jts', version: '1.13'
+    compile group: 'de.grundid.opendatalab', name: 'geojson-jackson', version: '1.6'
+
     compile group: 'org.apache.hbase', name: 'hbase-client', version: hbaseVersion
     compile group: 'org.apache.hbase', name: 'hbase-server', version: hbaseVersion
     testCompile group: 'org.apache.hbase', name: 'hbase-examples', version:  hbaseVersion
@@ -23,10 +26,3 @@ dependencies {
 }
 
 
-
-
-//shadowJar {
-//    exclude 'META-INF/*.DSA'
-//    exclude 'META-INF/*.RSA'
-//
-//}

@@ -1,9 +1,6 @@
 package org.openstreetmap.osmosis.hbase.common;
 
-import com.google.common.primitives.Longs;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.hadoop.hbase.Cell;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -19,49 +16,9 @@ import java.util.*;
  *
  * Created by willtemperley@gmail.com on 15-Jul-16.
  */
-public abstract class EntitySerDe<T extends Entity> {
+public abstract class EntitySerDe<T extends Entity> extends EntityDataAccess {
 
-    public static byte[] tags = "t".getBytes();
-    public static byte[] data = "d".getBytes();
-
-    private static byte[] version = "v".getBytes();
-    private static byte[] timestamp = "ts".getBytes();
-    private static byte[] changeset = "cs".getBytes();
-    private static byte[] uid = "uid".getBytes();
-    private static byte[] uname = "uname".getBytes();
-
-    public CellGenerator getDataCellGenerator() {
-        return dataKvGen;
-    }
-
-    private CellGenerator dataKvGen;
-
-    private long getId(byte[] rowKey) {
-        ArrayUtils.reverse(rowKey);
-        return Longs.fromByteArray(rowKey);
-    }
-
-    public byte[] getRowKey(Entity entity) {
-        long entityId = entity.getId();
-        return getRowKey(entityId);
-    }
-
-    public byte[] getRowKey(long entityId) {
-        byte[] bytes = Bytes.toBytes(entityId);
-        ArrayUtils.reverse(bytes);
-        return bytes;
-    }
-
-    private String getString(byte[] column, Result result) {
-        return Bytes.toString(result.getValue(data, column));
-    }
-    private long getLong(byte[] column, Result result) {
-        return Bytes.toLong(result.getValue(data, column));
-    }
-    private int getInt(byte[] column, Result result) {
-        return Bytes.toInt(result.getValue(data, column));
-    }
-    double getDouble(byte[] column, Result result) { return Bytes.toDouble(result.getValue(data, column)); }
+    protected CellGenerator dataKvGen;
 
     /**
      * Generate cells for the main column family
@@ -148,5 +105,9 @@ public abstract class EntitySerDe<T extends Entity> {
 
         return new CommonEntityData(id, v, date, osmUser, cs, tags);
 
+    }
+
+    public CellGenerator getDataCellGenerator() {
+        return dataKvGen;
     }
 }

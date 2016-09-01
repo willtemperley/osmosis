@@ -47,13 +47,8 @@ import java.util.List;
  */
 public class HBaseChangesetTest extends AbstractDataTest {
 
-    private Injector injector;
 
-    @Before
-    public void init() throws Exception {
-        injector = Guice.createInjector(new MockHTableModule());
-    }
-
+    protected Injector injector;
 
     /**
      * Prints the difference between two xml files
@@ -61,7 +56,6 @@ public class HBaseChangesetTest extends AbstractDataTest {
      * @param test observed file
      */
     public void diffFiles(File control, File test) throws IOException {
-
 
         Diff myDiff = DiffBuilder.compare(control).withTest(test)
                 .build();
@@ -106,54 +100,6 @@ public class HBaseChangesetTest extends AbstractDataTest {
 
         dataUtils.compareFiles(snapshotXmlFile, actualResultFile);
 
-    }
-
-    /**
-     * Loads a table via mapreduce into the specified table
-     *
-     * @param snapshotBinaryFile the source file
-     * @param tableName the table to load
-     * @param mapper the mapper to use. Reducer is just a way of collecting the table insertions.
-     * @throws IOException y
-     */
-    private <T extends Entity> void loadTable(File snapshotBinaryFile, String tableName, OsmEntityMapper<T> mapper) throws IOException {
-
-        TableFactory hTableFact = injector.getInstance(TableFactory.class);
-
-        MapReduceDriver<Text, ArrayPrimitiveWritable, ImmutableBytesWritable, Cell, ImmutableBytesWritable, Put> mapReduceDriver = MapReduceDriver.newMapReduceDriver();
-        Table mockTable = hTableFact.getTable(tableName);
-
-        CellReducer cellReducer = new CellReducer();
-        mapReduceDriver.setMapper(mapper);
-        mapReduceDriver.setReducer(cellReducer);
-
-
-        //Set up config with some settings that would normally be set in HFileOutputFormat2.configureIncrementalLoad();
-        Configuration configuration = mapReduceDriver.getConfiguration();
-        configuration.setStrings("io.serializations", configuration.get("io.serializations"),
-                MutationSerialization.class.getName(), ResultSerialization.class.getName(),
-                KeyValueSerialization.class.getName());
-
-
-        InputStream inputStream = new FileInputStream(snapshotBinaryFile);
-        PbfStreamSplitter streamSplitter = new PbfStreamSplitter(new DataInputStream(inputStream));
-
-        ArrayPrimitiveWritable arrayPrimitiveWritable = new ArrayPrimitiveWritable();
-        Text text = new Text();
-
-        while (streamSplitter.hasNext()) {
-            PbfRawBlob blob = streamSplitter.next();
-            arrayPrimitiveWritable.set(blob.getData());
-            String type = blob.getType();
-            text.set(type);
-            mapReduceDriver.withInput(text, arrayPrimitiveWritable);
-        }
-
-        //Retrieve MR results
-        List<Pair<ImmutableBytesWritable, Put>> results = mapReduceDriver.run();
-        for (Pair<ImmutableBytesWritable, Put> cellPair : results) {
-            mockTable.put(cellPair.getSecond());
-        }
     }
 
     /**
@@ -214,5 +160,58 @@ public class HBaseChangesetTest extends AbstractDataTest {
 
         // Validate that the dumped file matches the expected result.
         dataUtils.compareFiles(expectedResultFile, actualResultFile);
+    }
+
+    @Before
+    public void init() throws Exception {
+        injector = Guice.createInjector(new MockHTableModule());
+    }
+
+    /**
+     * Loads a table via mapreduce into the specified table
+     *
+     * @param snapshotBinaryFile the source file
+     * @param tableName the table to load
+     * @param mapper the mapper to use. Reducer is just a way of collecting the table insertions.
+     * @throws IOException y
+     */
+    protected <T extends Entity> void loadTable(File snapshotBinaryFile, String tableName, OsmEntityMapper<T> mapper) throws IOException {
+
+        TableFactory hTableFact = injector.getInstance(TableFactory.class);
+
+        MapReduceDriver<Text, ArrayPrimitiveWritable, ImmutableBytesWritable, Cell, ImmutableBytesWritable, Put> mapReduceDriver = MapReduceDriver.newMapReduceDriver();
+        Table mockTable = hTableFact.getTable(tableName);
+
+        CellReducer cellReducer = new CellReducer();
+        mapReduceDriver.setMapper(mapper);
+        mapReduceDriver.setReducer(cellReducer);
+
+
+        //Set up config with some settings that would normally be set in HFileOutputFormat2.configureIncrementalLoad();
+        Configuration configuration = mapReduceDriver.getConfiguration();
+        configuration.setStrings("io.serializations", configuration.get("io.serializations"),
+                MutationSerialization.class.getName(), ResultSerialization.class.getName(),
+                KeyValueSerialization.class.getName());
+
+
+        InputStream inputStream = new FileInputStream(snapshotBinaryFile);
+        PbfStreamSplitter streamSplitter = new PbfStreamSplitter(new DataInputStream(inputStream));
+
+        ArrayPrimitiveWritable arrayPrimitiveWritable = new ArrayPrimitiveWritable();
+        Text text = new Text();
+
+        while (streamSplitter.hasNext()) {
+            PbfRawBlob blob = streamSplitter.next();
+            arrayPrimitiveWritable.set(blob.getData());
+            String type = blob.getType();
+            text.set(type);
+            mapReduceDriver.withInput(text, arrayPrimitiveWritable);
+        }
+
+        //Retrieve MR results
+        List<Pair<ImmutableBytesWritable, Put>> results = mapReduceDriver.run();
+        for (Pair<ImmutableBytesWritable, Put> cellPair : results) {
+            mockTable.put(cellPair.getSecond());
+        }
     }
 }

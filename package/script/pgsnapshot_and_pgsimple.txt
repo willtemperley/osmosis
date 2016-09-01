@@ -11,8 +11,8 @@ The purpose of the pgsimple schema is to provide a simplistic and generic schema
 The purpose of the pgsnapshot schema is similar but maximises performance through CLUSTERed indexes and embedded tag data.  It imposes additional programming complexity.
 
 The following scripts are available for both schemas:
-pgxxx_schema_0.x.sql - The schema creation script.
+pgxxx_schema_0.inclusionCriterion.sql - The schema creation script.
 pgxxx_schema_0.x_bbox.sql - A script for adding way bbox column support.
 pgxxx_schema_0.x_linestring.sql - A script for adding way linestring column support.
 pgxxx_schema_0.x_action.sql - A script for adding an action table which is populated during changeset processing to allow derivative tables to be kept up to date.
-pgxxx_load_0.x.sql - A script for importing PostgreSQL "COPY" files as produced by the osmosis --write-pgxxx-dump tasks.
+pgxxx_load_0.inclusionCriterion.sql - A script for importing PostgreSQL "COPY" files as produced by the osmosis --write-pgxxx-dump tasks.

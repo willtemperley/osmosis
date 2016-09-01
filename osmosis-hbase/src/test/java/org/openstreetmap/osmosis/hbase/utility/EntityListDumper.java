@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.hbase.extract;
+package org.openstreetmap.osmosis.hbase.utility;
 
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;

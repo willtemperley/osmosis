@@ -88,8 +88,8 @@ public class HBaseDatasetContext implements DatasetContext {
 
     private <T extends Entity> HBaseIterator<T> getHBaseIterator(String tableName, EntitySerDe<T> serDe) throws IOException {
         Scan scan = new Scan();
-        scan.addFamily(EntitySerDe.data);
-        scan.addFamily(EntitySerDe.tags);
+        scan.addFamily(EntityDataAccess.data);
+        scan.addFamily(EntityDataAccess.tags);
         Table table = tableFactory.getTable(tableName);
         return new HBaseIterator<T>(table.getScanner(scan), serDe);
     }
