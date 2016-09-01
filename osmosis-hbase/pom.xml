@@ -46,6 +46,11 @@
     </profiles>
 
     <dependencies>
+        <dependency>
+            <groupId>de.grundid.opendatalab</groupId>
+            <artifactId>geojson-jackson</artifactId>
+            <version>1.6</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.hbase</groupId>
