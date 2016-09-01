@@ -73,69 +73,12 @@ public class RelationBuilder {
         return feature;
     }
 
-    /**
-     *
-     *
-     * @param relationId
-     * @return
-     * @throws JsonProcessingException
-     */
-    public FeatureCollection getRelationAsJson(long relationId) throws JsonProcessingException {
-
-        /**
-         * is there some mini graph lib somewhere please?
-         *
-         * Should be a DCG
-         *
-         * http://www.openstreetmap.org/relation/87565
-         *
-         *
-         */
-
-        FeatureCollection featureCollection = new FeatureCollection();
-        Relation relation = relationDao.get(relationId);
-
-//        if (relation.g)
-
-        List<Way> inners = new ArrayList<Way>();
-
-        List<RelationMember> members = relation.getMembers();
-        for (RelationMember member : members) {
-            EntityType memberType = member.getMemberType();
-
-
-            if (memberType.equals(EntityType.Node)) {
-                Node node = nodeDao.get(member.getMemberId());
-                throw new NotImplementedException("Node in relation");
-            } else if (memberType.equals(EntityType.Way)) {
-
-                if (member.getMemberRole().equals("inner")) {
-
-//                    inners.add();
-//                } else if (member.getMemberRole().equals("outer")) {
-
-                }
-//                Way way = wayDao.get(member.getMemberId());
-                Feature way = getWay(member.getMemberId());
-                featureCollection.add(way);
-
-            } else if (memberType.equals(EntityType.Relation)) {
-                System.out.println("Todo nested " + memberType);
-//                Relation nestedRelation = relationDao.get(member.getMemberId());
-//                getRelationMembers(nestedRelation, containers);
-            }
-        }
-
-        return featureCollection;
-    }
 
     public List<EntityContainer> getRelationMembers(Relation relation, List<EntityContainer> containers) {
         containers.add(new RelationContainer(relation));
         List<RelationMember> members = relation.getMembers();
         for (RelationMember member : members) {
             EntityType memberType = member.getMemberType();
-            System.out.println("memberType = " + memberType);
-            System.out.println("id = " + member.getMemberId());
 
             if (memberType.equals(EntityType.Node)) {
                 Node node = nodeDao.get(member.getMemberId());
@@ -152,6 +95,8 @@ public class RelationBuilder {
                     containers.add(nodeContainer);
                 }
             } else if (memberType.equals(EntityType.Relation)) {
+                System.out.println("memberType = " + memberType);
+                System.out.println("id = " + member.getMemberId());
                 Relation nestedRelation = relationDao.get(member.getMemberId());
                 getRelationMembers(nestedRelation, containers);
             }
