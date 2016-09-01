@@ -33,7 +33,7 @@ public class ExtractRelation {
      */
     public static void main(String[] args) throws IOException {
 
-        String pathname = "/tmp/x.xml";
+        String pathname = "/tmp/x.osm.xml";
         Injector objectGraph = Guice.createInjector(new TableModule());
         long relationId = 2715959;
 

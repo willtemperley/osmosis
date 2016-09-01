@@ -7,10 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
+import org.openstreetmap.osmosis.hbase.extract.EntityListDumper;
 import org.openstreetmap.osmosis.hbase.extract.RelationBuilder;
 import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
+import org.openstreetmap.osmosis.xml.v0_6.XmlWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,12 +52,29 @@ public class TestGeomBuild extends AbstractDataTest {
             System.out.println("entityContainer = " + entityContainer);
         }
 
+
+        EntityListDumper entityListDumper = new EntityListDumper(relation);
+
+        writeHBaseDataToXml(entityListDumper, new File("E:/tmp/x.osm.xml"));
+
+
 //        FeatureCollection featureCollection = relationBuilder.getRelationAsJson(2715959);
 //        String json= new ObjectMapper().writeValueAsString(featureCollection);
 //        System.out.println(json);
 //
 //        relationBuilder.getWay(414419509);
 //        RelationBuilder relationBuilder = new RelationBuilder()
+    }
+
+    private static void writeHBaseDataToXml(EntityListDumper dumpDataset, File actualResultFile) {
+
+        XmlWriter writer = new XmlWriter(actualResultFile, CompressionMethod.None);
+
+        //dataset sunk into sorter
+        dumpDataset.setSink(writer);
+
+        //sorter sunk into writer
+        dumpDataset.process(null);
     }
 
 }
