@@ -37,6 +37,7 @@ public class ExtractWay {
         List<EntityContainer> relation = featureDataExtractor.getWay(wayId);
 
         EntityListDumper entityListDumper = new EntityListDumper(relation);
+
         writeHBaseDataToXml(entityListDumper, new File(pathname));
     }
 
