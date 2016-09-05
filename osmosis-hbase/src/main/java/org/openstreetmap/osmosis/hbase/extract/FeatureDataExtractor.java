@@ -26,13 +26,13 @@ import java.util.List;
  *
  * Created by willtemperley@gmail.com on 29-Aug-16.
  */
-public class RelationBuilder {
+public class FeatureDataExtractor {
 
     private final RelationDao relationDao;
     private final WayDao wayDao;
     private final NodeDao nodeDao;
 
-    public RelationBuilder(TableFactory tableFactory) throws IOException {
+    public FeatureDataExtractor(TableFactory tableFactory) throws IOException {
 
         relationDao = new RelationDao(tableFactory.getTable("relations"));
         wayDao = new WayDao(tableFactory.getTable("ways"));
@@ -46,7 +46,20 @@ public class RelationBuilder {
         return getRelationMembers(relation, entityContainers);
     }
 
-    public Feature getWay(long wayId) throws JsonProcessingException {
+    public List<EntityContainer> getWay(long wayId) {
+        Way way = wayDao.get(wayId);
+        List<Node> nodes = getNodes(way);
+
+        List<EntityContainer> entityContainers = new ArrayList<EntityContainer>();
+        entityContainers.add(new WayContainer(way));
+        for (Node node : nodes) {
+            entityContainers.add(new NodeContainer(node));
+        }
+        return entityContainers;
+    }
+
+    @Deprecated
+    public Feature getWayAsJson(long wayId) throws JsonProcessingException {
 
         Way way = wayDao.get(wayId);
 

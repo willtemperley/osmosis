@@ -2,13 +2,12 @@ package org.openstreetmap.osmosis.hbase;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.geojson.FeatureCollection;
 import org.junit.Before;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
 import org.openstreetmap.osmosis.hbase.extract.EntityListDumper;
-import org.openstreetmap.osmosis.hbase.extract.RelationBuilder;
+import org.openstreetmap.osmosis.hbase.extract.FeatureDataExtractor;
 import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ *
  * Created by willtemperley@gmail.com on 30-Aug-16.
  */
 public class TestGeomBuild extends AbstractDataTest {
@@ -43,20 +43,17 @@ public class TestGeomBuild extends AbstractDataTest {
 
         xmlReader.run();
 
-        RelationBuilder relationBuilder = new RelationBuilder(injector.getInstance(TableFactory.class));
+        FeatureDataExtractor featureDataExtractor = new FeatureDataExtractor(injector.getInstance(TableFactory.class));
 
-
-        List<EntityContainer> relation = relationBuilder.getRelation(1L);
+        List<EntityContainer> relation = featureDataExtractor.getRelation(1L);
 
         for (EntityContainer entityContainer : relation) {
             System.out.println("entityContainer = " + entityContainer);
         }
 
-
         EntityListDumper entityListDumper = new EntityListDumper(relation);
 
         writeHBaseDataToXml(entityListDumper, new File("E:/tmp/x.osm.xml"));
-
 
 //        FeatureCollection featureCollection = relationBuilder.getRelationAsJson(2715959);
 //        String json= new ObjectMapper().writeValueAsString(featureCollection);

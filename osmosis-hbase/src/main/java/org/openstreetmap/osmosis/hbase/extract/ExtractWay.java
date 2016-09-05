@@ -17,7 +17,7 @@ import java.util.List;
  *
  * Created by willtemperley@gmail.com on 23-Aug-16.
  */
-public class ExtractRelation {
+public class ExtractWay {
 
 
     /**
@@ -27,16 +27,14 @@ public class ExtractRelation {
     public static void main(String[] args) throws IOException {
 
         Injector objectGraph = Guice.createInjector(new TableModule());
-        long relationId = Long.valueOf(args[0]);
+        long wayId = Long.valueOf(args[0]);
         String pathname = args[1];
 
         TableFactory tableFactory = objectGraph.getInstance(TableFactory.class);
 
         FeatureDataExtractor featureDataExtractor = new FeatureDataExtractor(tableFactory);
 
-        System.out.println("relationBuilder = " + featureDataExtractor);
-
-        List<EntityContainer> relation = featureDataExtractor.getRelation(relationId);
+        List<EntityContainer> relation = featureDataExtractor.getWay(wayId);
 
         EntityListDumper entityListDumper = new EntityListDumper(relation);
         writeHBaseDataToXml(entityListDumper, new File(pathname));
