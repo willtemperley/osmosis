@@ -6,6 +6,8 @@ import org.apache.hadoop.hbase.client.*;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Loads and wraps an hbase connection
@@ -20,10 +22,18 @@ class HTableFactory  implements TableFactory {
         connection = ConnectionFactory.createConnection(getConfiguration());
     }
 
-    private Configuration getConfiguration() {
+    private Configuration getConfiguration() throws IOException {
         Configuration configuration = new Configuration();
-        configuration.set("hbase.zookeeper.quorum", "hadoop-m2,hadoop-m1,hadoop-01");
-        configuration.set("hbase.master", "hadoop-m2");
+        Properties props = new Properties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream resourceStream = loader.getResourceAsStream("hbase-config.properties");
+
+        props.load(resourceStream);
+
+        String quorum = "hbase.zookeeper.quorum";
+        String master = "hbase.master";
+        configuration.set(quorum, props.getProperty(quorum));
+        configuration.set(master, props.getProperty(master));
         return configuration;
     }
 

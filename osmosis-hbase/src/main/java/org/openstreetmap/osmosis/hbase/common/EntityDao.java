@@ -49,8 +49,8 @@ public abstract class EntityDao<T extends Entity> {
         }
     }
 
-    public boolean exists(T entity) {
-        Get get = new Get(EntityDataAccess.getRowKey(entity));
+    public boolean exists(long entityId) {
+        Get get = new Get(EntityDataAccess.getRowKey(entityId));
         try {
             return table.exists(get);
         } catch (IOException e) {
