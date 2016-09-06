@@ -1,8 +1,6 @@
 package org.openstreetmap.osmosis.hbase.common;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -43,7 +41,7 @@ public abstract class EntityDao<T extends Entity> {
 
     private void delete(T entity) {
 
-        Delete delete = new Delete(serde.getRowKey(entity));
+        Delete delete = new Delete(EntityDataAccess.getRowKey(entity));
         try {
             table.delete(delete);
         } catch (IOException e) {
@@ -52,7 +50,7 @@ public abstract class EntityDao<T extends Entity> {
     }
 
     public boolean exists(T entity) {
-        Get get = new Get(serde.getRowKey(entity));
+        Get get = new Get(EntityDataAccess.getRowKey(entity));
         try {
             return table.exists(get);
         } catch (IOException e) {
@@ -67,7 +65,7 @@ public abstract class EntityDao<T extends Entity> {
 
         for (int i = 0; i < entityIds.length; i++) {
 
-            byte[] rowKey = serde.getRowKey(entityIds[i]);
+            byte[] rowKey = EntityDataAccess.getRowKey(entityIds[i]);
             Get get = new Get(rowKey);
             gets.add(i, get);
         }
@@ -86,11 +84,11 @@ public abstract class EntityDao<T extends Entity> {
 
     public T get(long entityId) {
 
-        byte[] rowKey = serde.getRowKey(entityId);
+        byte[] rowKey = EntityDataAccess.getRowKey(entityId);
 
         Get get = new Get(rowKey);
-        get.addFamily(EntitySerDe.data);
-        get.addFamily(EntitySerDe.tags);
+        get.addFamily(EntityDataAccess.data);
+        get.addFamily(EntityDataAccess.tags);
         try {
 
             Result result = table.get(get);
