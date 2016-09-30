@@ -35,11 +35,11 @@ public class TestGeomBuild extends AbstractDataTest {
 
         File dataFile = dataUtils.createDataFile("v0_6/db-snapshot2rel.osm");
 
-        HBaseChangeWriter hBaseChangeWriter = injector.getInstance(HBaseChangeWriter.class);
+        HBaseWriter hBaseWriter = injector.getInstance(HBaseWriter.class);
 
         //read
         XmlReader xmlReader = new XmlReader(dataFile, true, CompressionMethod.None);
-        xmlReader.setSink(hBaseChangeWriter);
+        xmlReader.setSink(hBaseWriter);
 
         xmlReader.run();
 

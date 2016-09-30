@@ -4,8 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.KeyValueSerialization;
 import org.apache.hadoop.hbase.mapreduce.MutationSerialization;
@@ -18,11 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.dataset.v0_6.DumpDataset;
+import org.openstreetmap.osmosis.hbase.common.EntityDataAccess;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
-import org.openstreetmap.osmosis.hbase.mr.NodeMapper;
-import org.openstreetmap.osmosis.hbase.mr.OsmEntityMapper;
-import org.openstreetmap.osmosis.hbase.mr.RelationMapper;
-import org.openstreetmap.osmosis.hbase.mr.WayMapper;
+import org.openstreetmap.osmosis.hbase.mr.*;
+import org.openstreetmap.osmosis.hbase.mr.writable.OsmEntityWritable;
 import org.openstreetmap.osmosis.hbase.reader.HBaseReader;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfRawBlob;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfStreamSplitter;
@@ -102,6 +100,8 @@ public class HBaseChangesetTest extends AbstractDataTest {
 
     }
 
+
+
     /**
      * Gets an hbase reader which will have the singleton tablefactory injected and writes out the data to xml for comparison purposes
      * 
@@ -127,6 +127,51 @@ public class HBaseChangesetTest extends AbstractDataTest {
         dumpDataset.process(hBaseReader);
     }
 
+    /**
+     *
+     * @throws IOException
+     */
+    @Test
+    public void mutation() throws IOException {
+
+        File snapshotFile;
+
+        // Generate input files.
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        //two for one
+        HBaseWriter changeWriter = injector.getInstance(HBaseWriter.class);
+
+        //read
+        XmlReader xmlReader = new XmlReader(snapshotFile, true, CompressionMethod.None);
+        xmlReader.setSink(changeWriter);
+        xmlReader.run();
+
+        TableFactory hTableFact = injector.getInstance(TableFactory.class);
+        MapReduceDriver<ImmutableBytesWritable, Result, ImmutableBytesWritable, OsmEntityWritable, ImmutableBytesWritable, Mutation> mapReduceDriver = MapReduceDriver.newMapReduceDriver();
+
+        mapReduceDriver.setMapper(new WayTableLoader().new SiteGridMapper());
+        mapReduceDriver.setReducer(new WayTableLoader().new SiteGridReducer());
+
+        setupSerialization(mapReduceDriver);
+
+        Table ways = hTableFact.getTable("ways");
+        Table nodes = hTableFact.getTable("nodes");
+        Scan scan = new Scan().addFamily(EntityDataAccess.data).addFamily(EntityDataAccess.tags);
+        ResultScanner wayScanner = ways.getScanner(scan);
+        ResultScanner nodeScanner = nodes.getScanner(scan);
+        ImmutableBytesWritable row = new ImmutableBytesWritable();
+        for (Result result : wayScanner) {
+            row.set(result.getRow());
+            mapReduceDriver.withInput(row, result);
+        }
+        for (Result result : nodeScanner) {
+            row.set(result.getRow());
+            mapReduceDriver.withInput(row, result);
+        }
+
+        mapReduceDriver.run();
+
+    }
 
     @Test
     public void changeset() throws IOException {
@@ -143,7 +188,7 @@ public class HBaseChangesetTest extends AbstractDataTest {
         actualResultFile = dataUtils.newFile();
 
         //two for one
-        HBaseChangeWriter changeWriter = injector.getInstance(HBaseChangeWriter.class);
+        HBaseWriter changeWriter = injector.getInstance(HBaseWriter.class);
 
         //read
         XmlReader xmlReader = new XmlReader(snapshotFile, true, CompressionMethod.None);
@@ -186,12 +231,8 @@ public class HBaseChangesetTest extends AbstractDataTest {
         mapReduceDriver.setMapper(mapper);
         mapReduceDriver.setReducer(cellReducer);
 
-
         //Set up config with some settings that would normally be set in HFileOutputFormat2.configureIncrementalLoad();
-        Configuration configuration = mapReduceDriver.getConfiguration();
-        configuration.setStrings("io.serializations", configuration.get("io.serializations"),
-                MutationSerialization.class.getName(), ResultSerialization.class.getName(),
-                KeyValueSerialization.class.getName());
+        setupSerialization(mapReduceDriver);
 
 
         InputStream inputStream = new FileInputStream(snapshotBinaryFile);
@@ -213,5 +254,15 @@ public class HBaseChangesetTest extends AbstractDataTest {
         for (Pair<ImmutableBytesWritable, Put> cellPair : results) {
             mockTable.put(cellPair.getSecond());
         }
+    }
+
+    /*
+    On a cluster this would already be set.
+     */
+    private void setupSerialization(MapReduceDriver<?, ?, ?, ?, ?, ?> mapReduceDriver) {
+        Configuration configuration = mapReduceDriver.getConfiguration();
+        configuration.setStrings("io.serializations", configuration.get("io.serializations"),
+                MutationSerialization.class.getName(), ResultSerialization.class.getName(),
+                KeyValueSerialization.class.getName());
     }
 }

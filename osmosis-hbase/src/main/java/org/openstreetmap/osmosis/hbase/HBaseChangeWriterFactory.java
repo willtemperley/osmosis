@@ -18,10 +18,10 @@ public class HBaseChangeWriterFactory extends TaskManagerFactory {
 	private static final String ARG_KEEP_INVALID_WAYS = "keepInvalidWays";
 	private static final boolean DEFAULT_KEEP_INVALID_WAYS = true;
 
-	private final HBaseChangeWriter changeWriter;
+	private final HBaseWriter changeWriter;
 
     @Inject
-	public HBaseChangeWriterFactory(HBaseChangeWriter changeWriter){
+	public HBaseChangeWriterFactory(HBaseWriter changeWriter){
     	this.changeWriter = changeWriter;
 	}
 

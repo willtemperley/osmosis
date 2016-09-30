@@ -13,13 +13,15 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
  */
 public class EntityDataAccess {
 
-    public static byte[] tags = "t".getBytes();
-    public static byte[] data = "d".getBytes();
-    protected static byte[] version = "v".getBytes();
-    protected static byte[] timestamp = "ts".getBytes();
-    protected static byte[] changeset = "cs".getBytes();
-    protected static byte[] uid = "uid".getBytes();
-    protected static byte[] uname = "uname".getBytes();
+    public static byte[] tags = Bytes.toBytes("t");
+    public static byte[] data = Bytes.toBytes("d");
+
+    protected static byte[] version = Bytes.toBytes("v");
+    protected static byte[] timestamp = Bytes.toBytes("ts");
+    protected static byte[] changeset = Bytes.toBytes("cs");
+    protected static byte[] uid = Bytes.toBytes("uid");
+    protected static byte[] uname = Bytes.toBytes("uname");
+    public static byte[] entitytype = Bytes.toBytes("et");
 
     public static long getId(byte[] rowKey) {
         ArrayUtils.reverse(rowKey);

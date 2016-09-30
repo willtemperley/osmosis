@@ -46,9 +46,9 @@ public class TableLoader extends Configured implements Tool{
         Class<? extends Mapper> mapperClass;// = OsmEntityMapper.class;
 //        EntityType entityType = en
 
-        if (tableName.equals("nodes")) {
+        if (tableName.equals("tableNodes")) {
             mapperClass = NodeMapper.class;
-        } else if (tableName.equals("ways")) {
+        } else if (tableName.equals("tableWays")) {
             mapperClass = WayMapper.class;
         } else if (tableName.equals("relations")) {
             mapperClass = RelationMapper.class;

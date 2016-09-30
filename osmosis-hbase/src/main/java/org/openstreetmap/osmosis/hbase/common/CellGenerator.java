@@ -25,13 +25,17 @@ public class CellGenerator {
     public KeyValue getKeyValue(byte[] rowKey, byte[] column, String value) {
         return new KeyValue(rowKey, columnFamily, column, Bytes.toBytes(value));
     }
+
     public KeyValue getKeyValue(byte[] rowKey, byte[] column, int value) {
         return new KeyValue(rowKey, columnFamily, column, Bytes.toBytes(value));
     }
+
     public KeyValue getKeyValue(byte[] rowKey, byte[] column, double value) {
         return new KeyValue(rowKey, columnFamily, column, Bytes.toBytes(value));
     }
+
     public KeyValue getKeyValue(byte[] rowKey, byte[] column, long value) {
         return new KeyValue(rowKey, columnFamily, column, Bytes.toBytes(value));
     }
+
 }

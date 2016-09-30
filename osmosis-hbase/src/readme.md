@@ -8,6 +8,8 @@ Instead of preprocessing to seqence file, create the entities directly on HDFS?
 Keeping all ways by default
 
 
+
+
 Table design
 ============
 
@@ -40,7 +42,7 @@ STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
 WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key,t:name")
 TBLPROPERTIES ("hbase.table.name" = "nodes");
 
-hbase org.autil.RegionSplitter nodes UniformSplit -c 30 -f d:t
+hbase org.apache.hadoop.hbase.util.RegionSplitter nodes UniformSplit -c 30 -f d:t
 hadoop jar target/osmosis-hbase-0.1.jar org.openstreetmap.osmosis.hbase.mr.TableLoader ways /user/tempehu/africa-latest.pbf.seq /user/tempehu/hfile-relations
 hdfs dfs -chmod -R 777 /user/tempehu/hfile-relations
 hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles /user/tempehu/hfile-relations relations
@@ -64,7 +66,6 @@ https://github.com/tyrasd/osm-polygon-features/blob/master/polygon-features.json
 
 Multipolygons are messier:
 http://wiki.openstreetmap.org/wiki/Relation:multipolygon
-
 
 
 http://wiki.openstreetmap.org/wiki/Area/The_Future_of_Areas

@@ -5,6 +5,7 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.io.ArrayPrimitiveWritable;
 import org.apache.hadoop.io.WritableUtils;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 
@@ -22,6 +23,11 @@ import java.util.List;
 public class WaySerDe extends EntitySerDe<Way> {
 
     private static byte[] nodeCol = "waynodes".getBytes();
+
+    @Override
+    public int getEntityType() {
+        return EntityType.Way.ordinal();
+    }
 
     @Override
     public void encode(byte[] rowKey, Way entity, List<Cell> keyValues) {

@@ -5,7 +5,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.hbase.common.NodeSerDe;
 
 /**
- * Maps nodes to hbase key-values
+ * Maps tableNodes to hbase key-values
  *
  * Created by willtemperley@gmail.com on 28-Jul-16.
  */

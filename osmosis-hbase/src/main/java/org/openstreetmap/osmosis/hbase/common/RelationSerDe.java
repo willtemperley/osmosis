@@ -24,18 +24,24 @@ public class RelationSerDe extends EntitySerDe<Relation> {
 
 //    values = EntityType.g.values()
 
-    private static final byte[] relation = "r".getBytes();
+    private static final byte[] relationColPrefix = "r".getBytes();
 
     public RelationSerDe() {
 
         /*
-        Seems that strings have to be in the right-most position
+        Seems that strings have to be in the right-most position as they are variable length
+        Can't have two strings
          */
         StructBuilder structBuilder = new StructBuilder();
         structBuilder.add(new RawLong());//member id
         structBuilder.add(new RawInteger());//member type
         structBuilder.add(RawString.ASCENDING);//member role
         struct = structBuilder.toStruct();
+    }
+
+    @Override
+    public int getEntityType() {
+        return EntityType.Relation.ordinal();
     }
 
     //    class RelationMember extends PBType
@@ -46,9 +52,7 @@ public class RelationSerDe extends EntitySerDe<Relation> {
 
         for (short i = 0; i < members.size(); i++) {
             byte[] bytes = encodeRelationMember(members.get(i));
-
             byte[] colName = getRelationMemberColumn(i);
-
             Cell cell = getDataCellGenerator().getKeyValue(rowKey, colName, bytes);
             keyValues.add(cell);
         }
@@ -56,18 +60,17 @@ public class RelationSerDe extends EntitySerDe<Relation> {
     }
 
     private byte[] getRelationMemberColumn(short i) {
-        return Bytes.add(relation, Bytes.toBytes(i));
+        return Bytes.add(relationColPrefix, Bytes.toBytes(i));
     }
 
     private byte[] encodeRelationMember(RelationMember rm) {
 
-        int memberTypeEnumStr = rm.getMemberType().ordinal();
+        //Store an int instead of a string for the enum
+        int memberTypeEnumOrdinal = rm.getMemberType().ordinal();
 
         positionedByteRange.set(new byte[8 + 4 + rm.getMemberRole().getBytes().length]);
-
-        Object[] val = {rm.getMemberId(), memberTypeEnumStr, rm.getMemberRole()};
+        Object[] val = {rm.getMemberId(), memberTypeEnumOrdinal, rm.getMemberRole()};
         struct.encode(positionedByteRange, val);
-
         return positionedByteRange.getBytes();
     }
 

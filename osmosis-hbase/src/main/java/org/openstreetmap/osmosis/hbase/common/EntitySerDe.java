@@ -38,11 +38,14 @@ public abstract class EntitySerDe<T extends Entity> extends EntityDataAccess {
         keyValues.add( dataKvGen.getKeyValue(rowKey, changeset, entity.getChangesetId()) );
         keyValues.add( dataKvGen.getKeyValue(rowKey, uid, entity.getUser().getId()) );
         keyValues.add( dataKvGen.getKeyValue(rowKey, uname, entity.getUser().getName()) );
+        keyValues.add( dataKvGen.getKeyValue(rowKey, entitytype, getEntityType()) );
 
         encode(rowKey, entity, keyValues);
 
         return keyValues;
     }
+
+    public abstract int getEntityType();
 
 
     public List<Cell> tagKeyValues(byte[] rowKey, T entity) {
@@ -65,13 +68,12 @@ public abstract class EntitySerDe<T extends Entity> extends EntityDataAccess {
         familyCellMap.put(data, dataKeyValues(rowKey, entity));
         familyCellMap.put(tags, tagKeyValues(rowKey, entity));
 
-
         return put;
     }
 
     protected abstract void encode(byte[] rowKey, T entity, List<Cell> keyValues);
 
-    T deSerialize(Result result) {
+    public T deSerialize(Result result) {
         return constructEntity(result, getCommonEntityData(result));
     }
 

@@ -36,27 +36,27 @@ public class HBaseDatasetContext implements DatasetContext {
 
     @Override
     public EntityManager<Node> getNodeManager() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public EntityManager<Way> getWayManager() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public EntityManager<Relation> getRelationManager() {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Node getNode(long id) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Way getWay(long id) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override

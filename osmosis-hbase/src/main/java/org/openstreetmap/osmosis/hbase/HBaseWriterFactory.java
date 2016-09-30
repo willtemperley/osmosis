@@ -1,15 +1,10 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.hbase;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
-import org.openstreetmap.osmosis.core.pipeline.v0_6.ChangeSinkManager;
 import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
 
 
@@ -22,10 +17,10 @@ class HBaseWriterFactory extends TaskManagerFactory {
 
 	private static final String ARG_KEEP_INVALID_WAYS = "keepInvalidWays";
 	private static final boolean DEFAULT_KEEP_INVALID_WAYS = true;
-	private final HBaseChangeWriter writer;
+	private final HBaseWriter writer;
 
 	@Inject
-    public HBaseWriterFactory(HBaseChangeWriter writer) {
+    public HBaseWriterFactory(HBaseWriter writer) {
 	    this.writer = writer;
 	}
 
