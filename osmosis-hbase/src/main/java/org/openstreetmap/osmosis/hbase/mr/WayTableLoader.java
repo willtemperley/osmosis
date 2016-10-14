@@ -95,10 +95,7 @@ public class WayTableLoader extends Configured implements Tool{
         else return 1;
     }
 
-    public class SiteGridMapper extends TableMapper<ImmutableBytesWritable, OsmEntityWritable> {
-
-        public SiteGridMapper() {
-        }
+    public static class SiteGridMapper extends TableMapper<ImmutableBytesWritable, OsmEntityWritable> {
 
         WaySerDe waySerDe = new WaySerDe();
         NodeSerDe nodeSerDe = new NodeSerDe();
@@ -149,10 +146,7 @@ public class WayTableLoader extends Configured implements Tool{
         }
     }
 
-    public class SiteGridReducer extends TableReducer<ImmutableBytesWritable, OsmEntityWritable, ImmutableBytesWritable> {
-
-        public SiteGridReducer() {
-        }
+    public static class SiteGridReducer extends TableReducer<ImmutableBytesWritable, OsmEntityWritable, ImmutableBytesWritable> {
 
         CoordStructWrapper coordStructWrapper = new CoordStructWrapper();
         ImmutableBytesWritable wayKey = new ImmutableBytesWritable();

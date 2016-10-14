@@ -128,11 +128,12 @@ public class HBaseChangesetTest extends AbstractDataTest {
     }
 
     /**
+     * MR mutation of hbase ways table
      *
-     * @throws IOException
+     * @throws IOException .
      */
     @Test
-    public void mutation() throws IOException {
+    public void wayTableMutation() throws IOException {
 
         File snapshotFile;
 
@@ -149,8 +150,8 @@ public class HBaseChangesetTest extends AbstractDataTest {
         TableFactory hTableFact = injector.getInstance(TableFactory.class);
         MapReduceDriver<ImmutableBytesWritable, Result, ImmutableBytesWritable, OsmEntityWritable, ImmutableBytesWritable, Mutation> mapReduceDriver = MapReduceDriver.newMapReduceDriver();
 
-        mapReduceDriver.setMapper(new WayTableLoader().new SiteGridMapper());
-        mapReduceDriver.setReducer(new WayTableLoader().new SiteGridReducer());
+        mapReduceDriver.setMapper(new WayTableLoader.SiteGridMapper());
+        mapReduceDriver.setReducer(new WayTableLoader.SiteGridReducer());
 
         setupSerialization(mapReduceDriver);
 
