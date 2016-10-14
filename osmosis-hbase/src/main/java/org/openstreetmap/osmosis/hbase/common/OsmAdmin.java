@@ -44,6 +44,7 @@ public class OsmAdmin {
 
         for (TableName tableName : tableNames) {
             System.out.println("truncating: " + tableName);
+            admin.disableTable(tableName);
             admin.truncateTable(tableName, true);
         }
 
