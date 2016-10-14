@@ -1,5 +1,6 @@
 package org.openstreetmap.osmosis.hbase.common;
 
+import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Table;
 
 import java.io.IOException;
@@ -14,4 +15,5 @@ public interface TableFactory {
 
     void close();
 
+    Connection getConnection();
 }

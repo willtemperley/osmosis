@@ -22,6 +22,10 @@ class HTableFactory  implements TableFactory {
         connection = ConnectionFactory.createConnection(getConfiguration());
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
     private Configuration getConfiguration() throws IOException {
         Configuration configuration = new Configuration();
         Properties props = new Properties();
