@@ -1,7 +1,8 @@
 package org.openstreetmap.osmosis.hbase.mr;
 
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
-import org.openstreetmap.osmosis.core.domain.v0_6.Node;
+import org.openstreetmap.osmosis.hbase.common.Node;
 import org.openstreetmap.osmosis.hbase.common.NodeSerDe;
 
 /**
@@ -12,5 +13,10 @@ import org.openstreetmap.osmosis.hbase.common.NodeSerDe;
 public class NodeMapper extends OsmEntityMapper<Node> {
     public NodeMapper() {
         super(EntityType.Node, new NodeSerDe());
+    }
+
+    @Override
+    Node getEntity(Entity entity) {
+        return new Node((org.openstreetmap.osmosis.core.domain.v0_6.Node) entity);
     }
 }

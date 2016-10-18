@@ -1,6 +1,8 @@
 package org.openstreetmap.osmosis.hbase.utility;
 
 
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.Table;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
 import org.slf4j.Logger;
@@ -38,6 +40,11 @@ public class MockHTableFactory implements TableFactory {
     @Override
     public void close() {
 
+    }
+
+    @Override
+    public Connection getConnection() {
+        throw new NotImplementedException();
     }
 
 }

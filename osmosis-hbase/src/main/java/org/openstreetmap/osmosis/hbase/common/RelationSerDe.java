@@ -6,7 +6,9 @@ import org.apache.hadoop.hbase.types.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.PositionedByteRange;
 import org.apache.hadoop.hbase.util.SimplePositionedMutableByteRange;
-import org.openstreetmap.osmosis.core.domain.v0_6.*;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
+import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 
 import java.util.ArrayList;
 import java.util.List;

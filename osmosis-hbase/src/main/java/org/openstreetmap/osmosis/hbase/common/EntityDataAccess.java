@@ -4,7 +4,6 @@ import com.google.common.primitives.Longs;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 
 /**
  * Constants and basic methods for OSM data access

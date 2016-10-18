@@ -9,11 +9,11 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
-import org.openstreetmap.osmosis.core.domain.v0_6.*;
-import org.openstreetmap.osmosis.hbase.common.NodeDao;
-import org.openstreetmap.osmosis.hbase.common.RelationDao;
-import org.openstreetmap.osmosis.hbase.common.TableFactory;
-import org.openstreetmap.osmosis.hbase.common.WayDao;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
+import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
+import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
+import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
+import org.openstreetmap.osmosis.hbase.common.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -55,6 +55,10 @@ Entities retrieved from HBase are eagerly evaluated. For example all tags are co
 This is wasteful and the HBase representation is perhaps more useful - there's no reason the backing map in a result can't be kept as-is and tags evaluated lazily.
 It may make sense to develop a higher performance version with a lazy wrapper.
 
+
+*** Irritatingly we've had to use wrappers for each domain object.
+*** These can't be constructed in a simple way and because Entity is a class we can't extend both this and the functionality in the domain objects.
+
 Polygons, ways and relations
 ============================
 
@@ -74,4 +78,16 @@ http://wiki.openstreetmap.org/wiki/Multipolygon_Examples
 https://help.openstreetmap.org/questions/8273/how-do-i-extract-the-polygon-of-an-administrative-boundary
 https://wiki.openstreetmap.org/wiki/Overpass_turbo/Polygon_Features
 https://wiki.openstreetmap.org/wiki/Overpass_turbo/Polygon_Features
+
+Design decision
+===============
+Given the need to add a qualifier to an HBase record (see table joins), it no longer really makes sense to separate tables.
+It may be better to have a single entity table -- simplifies a lot of stuff - multi scans not necessary etc.
+
+TODO
+====
+Single table branch
+Tests for qualifiers in entity records
+Protobuf for basic data records (user etc?)
+
 

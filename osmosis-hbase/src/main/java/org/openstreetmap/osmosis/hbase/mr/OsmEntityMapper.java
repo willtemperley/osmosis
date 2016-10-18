@@ -6,8 +6,9 @@ import org.apache.hadoop.io.ArrayPrimitiveWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
-import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
+import org.openstreetmap.osmosis.hbase.common.Entity;
+import org.openstreetmap.osmosis.hbase.common.EntityDataAccess;
 import org.openstreetmap.osmosis.hbase.common.EntitySerDe;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfBlobDecoder;
 
@@ -40,25 +41,26 @@ public abstract class OsmEntityMapper<T extends Entity> extends Mapper<Text, Arr
 
         List<EntityContainer> ecs = readBlob(bytes, key.toString());
         for (EntityContainer ec : ecs) {
-            Entity e = ec.getEntity();
-            T entity;
+
+            org.openstreetmap.osmosis.core.domain.v0_6.Entity e = ec.getEntity();
+
             if (e.getType().equals(entityType)) {
 
-                entity = (T) e;
-
-                byte[] rowKey = entitySerDe.getRowKey(entity);
+                byte[] rowKey = EntityDataAccess.getRowKey(e.getId());
                 k.set(rowKey);
 
-                for (Cell cell : entitySerDe.tagKeyValues(rowKey, entity)) {
+                for (Cell cell : entitySerDe.tagKeyValues(rowKey, e.getTags())) {
                     context.write(k, cell);
                 }
 
-                for (Cell cell : entitySerDe.dataKeyValues(rowKey, entity)) {
+                for (Cell cell : entitySerDe.dataKeyValues(rowKey, getEntity(e))) {
                     context.write(k, cell);
                 }
             }
         }
     }
+
+    abstract T getEntity(org.openstreetmap.osmosis.core.domain.v0_6.Entity entity);
 
     List<EntityContainer> readBlob(byte[] bytes, String osmDataType) {
 

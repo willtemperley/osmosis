@@ -15,10 +15,12 @@ import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.apache.hadoop.mrunit.types.Pair;
 import org.junit.Before;
 import org.junit.Test;
-import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.dataset.v0_6.DumpDataset;
+import org.openstreetmap.osmosis.hbase.common.Entity;
 import org.openstreetmap.osmosis.hbase.common.EntityDataAccess;
 import org.openstreetmap.osmosis.hbase.common.TableFactory;
+import org.openstreetmap.osmosis.hbase.common.WayDao;
 import org.openstreetmap.osmosis.hbase.mr.*;
 import org.openstreetmap.osmosis.hbase.mr.writable.OsmEntityWritable;
 import org.openstreetmap.osmosis.hbase.reader.HBaseReader;
@@ -128,7 +130,7 @@ public class HBaseChangesetTest extends AbstractDataTest {
     }
 
     /**
-     * MR mutation of hbase ways table
+     * MR job to generate ways using a mutation of hbase ways table
      *
      * @throws IOException .
      */
@@ -175,7 +177,7 @@ public class HBaseChangesetTest extends AbstractDataTest {
     }
 
     @Test
-    public void changeset() throws IOException {
+    public void testDBChangeset() throws IOException {
 
         File snapshotFile;
         File changesetFile;
@@ -206,6 +208,13 @@ public class HBaseChangesetTest extends AbstractDataTest {
 
         // Validate that the dumped file matches the expected result.
         dataUtils.compareFiles(expectedResultFile, actualResultFile);
+
+        //Linestrings
+        TableFactory instance = injector.getInstance(TableFactory.class);
+        Table ways = instance.getTable("ways");
+        WayDao wayDao = new WayDao(ways);
+        Way way = wayDao.get(1L);
+
     }
 
     @Before

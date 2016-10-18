@@ -1,7 +1,6 @@
 package org.openstreetmap.osmosis.hbase.common;
 
 import org.apache.hadoop.hbase.client.*;
-import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 
@@ -23,7 +22,7 @@ public abstract class EntityDao<T extends Entity> {
         this.serde = getSerDe();
     }
 
-    private final Table table;
+    final Table table;
 
 
     public void process(T entity, ChangeAction action) {
@@ -37,6 +36,7 @@ public abstract class EntityDao<T extends Entity> {
         } else {
             throw new RuntimeException("Unknown action: " + action);
         }
+
     }
 
     private void delete(T entity) {

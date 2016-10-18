@@ -5,7 +5,6 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
-import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 
@@ -48,11 +47,21 @@ public abstract class EntitySerDe<T extends Entity> extends EntityDataAccess {
     public abstract int getEntityType();
 
 
-    public List<Cell> tagKeyValues(byte[] rowKey, T entity) {
+//    public List<Cell> tagKeyValues(byte[] rowKey, Entity entity) {
+//
+//        List<Cell> keyValues = new ArrayList<Cell>();
+//        CellGenerator tagKvGen = new CellGenerator(tags);
+//        for (Tag tag : entity.getTags()) {
+//            keyValues.add( tagKvGen.getKeyValue(rowKey, tag.getKey().getBytes(), tag.getValue()) );
+//        }
+//        return keyValues;
+//    }
+
+    public List<Cell> tagKeyValues(byte[] rowKey, Collection<Tag> entityTags) {
 
         List<Cell> keyValues = new ArrayList<Cell>();
         CellGenerator tagKvGen = new CellGenerator(tags);
-        for (Tag tag : entity.getTags()) {
+        for (Tag tag : entityTags) {
             keyValues.add( tagKvGen.getKeyValue(rowKey, tag.getKey().getBytes(), tag.getValue()) );
         }
         return keyValues;
@@ -66,7 +75,7 @@ public abstract class EntitySerDe<T extends Entity> extends EntityDataAccess {
         NavigableMap<byte[], List<Cell>> familyCellMap = put.getFamilyCellMap();
 
         familyCellMap.put(data, dataKeyValues(rowKey, entity));
-        familyCellMap.put(tags, tagKeyValues(rowKey, entity));
+        familyCellMap.put(tags, tagKeyValues(rowKey, entity.getTags()));
 
         return put;
     }

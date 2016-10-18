@@ -2,7 +2,6 @@ package org.openstreetmap.osmosis.hbase.common;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
-import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 
 /**
  * DAO for relations

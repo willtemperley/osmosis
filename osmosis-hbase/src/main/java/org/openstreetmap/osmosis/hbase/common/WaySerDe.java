@@ -1,12 +1,16 @@
 package org.openstreetmap.osmosis.hbase.common;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKBReader;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.ArrayPrimitiveWritable;
 import org.apache.hadoop.io.WritableUtils;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
-import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 
 import java.io.ByteArrayInputStream;
@@ -22,7 +26,14 @@ import java.util.List;
  */
 public class WaySerDe extends EntitySerDe<Way> {
 
-    private static byte[] nodeCol = "waynodes".getBytes();
+    private static byte[] nodeCol = Bytes.toBytes("waynodes");
+    public static byte[] geom = Bytes.toBytes("geom");
+    private WKBReader wkbReader = new WKBReader();
+
+    private static Geometry emptyGeom;
+    static {
+        emptyGeom = new GeometryFactory().createGeometryCollection(null);
+    }
 
     @Override
     public int getEntityType() {
@@ -44,8 +55,10 @@ public class WaySerDe extends EntitySerDe<Way> {
         byte[] bytes = WritableUtils.toByteArray(writable);
 
         keyValues.add(getDataCellGenerator().getKeyValue(rowKey, nodeCol, bytes));
+        keyValues.add(getDataCellGenerator().getKeyValue(rowKey, nodeCol, bytes));
 
     }
+
 
     @Override
     public Way constructEntity(Result result, CommonEntityData commonEntityData) {
@@ -64,7 +77,21 @@ public class WaySerDe extends EntitySerDe<Way> {
             wayNodes.add(new WayNode(aLong));
         }
 
-        return new Way(commonEntityData, wayNodes);
+        byte[] value = result.getValue(EntityDataAccess.data, geom);
+        try {
+
+            Geometry geometry;
+            if (value != null) {
+               geometry = wkbReader.read(value);
+            } else {
+               geometry = emptyGeom;
+            }
+            //fixme geometry :)
+            return new Way(commonEntityData, wayNodes);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

@@ -3,7 +3,6 @@ package org.openstreetmap.osmosis.hbase.common;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
-import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 
 /**
  * Node data access
